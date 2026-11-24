@@ -1,0 +1,23 @@
+{
+  "name": "text-to-image-ai-generator",
+  "version": "1.0.0",
+  "description": "Minimalist Text-to-Image AI Generator Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "ai",
+    "text-to-image",
+    "stable-diffusion",
+    "huggingface",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@gradio/client": "^2.8.0",
+    "@huggingface/inference": "^4.13.33"
+  }
+}

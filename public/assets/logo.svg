@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40" fill="none">
+  <defs>
+    <!-- Vibrant Studio Gradients -->
+    <linearGradient id="prism-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="glow-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="ai-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Brand Mark Icon Group -->
+  <g transform="translate(4, 2)" filter="url(#subtle-glow)">
+    <!-- Base Glow Shadow -->
+    <rect x="0" y="0" width="36" height="36" rx="10" fill="url(#prism-grad)" opacity="0.25" filter="blur(6px)"/>
+    
+    <!-- Outer Rounded Hex/Shield Tile -->
+    <rect x="0" y="0" width="36" height="36" rx="10" fill="#0E121E" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.2"/>
+    
+    <!-- Central Geometric Aperture / AI Starburst Motif -->
+    <!-- Top Left Ray -->
+    <path d="M18 6L21 14L18 18L15 14Z" fill="url(#prism-grad)"/>
+    <!-- Bottom Right Ray -->
+    <path d="M18 30L15 22L18 18L21 22Z" fill="url(#prism-grad)"/>
+    <!-- Left Ray -->
+    <path d="M6 18L14 15L18 18L14 21Z" fill="url(#glow-grad)"/>
+    <!-- Right Ray -->
+    <path d="M30 18L22 21L18 18L22 15Z" fill="url(#ai-grad)"/>
+
+    <!-- Dynamic Curved Sparks -->
+    <circle cx="18" cy="18" r="3.2" fill="#FFFFFF"/>
+    <circle cx="9" cy="9" r="1.5" fill="#6366F1" opacity="0.8"/>
+    <circle cx="27" cy="9" r="1.2" fill="#EC4899" opacity="0.8"/>
+    <circle cx="27" cy="27" r="1.5" fill="#8B5CF6" opacity="0.8"/>
+    <circle cx="9" cy="27" r="1.2" fill="#06B6D4" opacity="0.8"/>
+  </g>
+
+  <!-- Typography Wordmark -->
+  <!-- "Imagine" -->
+  <text x="48" y="26" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.5" fill="url(#text-grad)">Imagine</text>
+  
+  <!-- "AI" Styled Badge -->
+  <g transform="translate(122, 10)">
+    <rect x="0" y="0" width="28" height="18" rx="5" fill="url(#prism-grad)"/>
+    <text x="14" y="13" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">AI</text>
+  </g>
+</svg>
