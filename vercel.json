@@ -1,22 +1,8 @@
 {
-  "version": 2,
-  "cleanUrls": true,
+  "outputDirectory": "public",
   "functions": {
     "api/*.js": {
       "maxDuration": 60
     }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
-    }
-  ]
+  }
 }

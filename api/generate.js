@@ -14,13 +14,28 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // Parse body safely
+  // Parse body safely whether pre-parsed by Vercel or raw stream
   let body = req.body;
-  if (typeof body === 'string') {
-    try {
-      body = JSON.parse(body);
-    } catch (e) {
-      return res.status(400).json({ error: 'INVALID_JSON', message: 'Invalid JSON payload' });
+  if (!body || typeof body !== 'object') {
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        body = {};
+      }
+    } else {
+      body = await new Promise((resolve) => {
+        let raw = '';
+        req.on('data', chunk => raw += chunk);
+        req.on('end', () => {
+          try {
+            resolve(JSON.parse(raw));
+          } catch (e) {
+            resolve({});
+          }
+        });
+        req.on('error', () => resolve({}));
+      });
     }
   }
   body = body || {};
