@@ -80,11 +80,17 @@ export class ImagePreview {
   _updateToolbarActions(visible) {
     const copyBtn = document.getElementById('btn-copy-prompt');
     const rerollBtn = document.getElementById('btn-reroll');
+    const favBtn = document.getElementById('btn-favorite-current');
+    const upscaleBtn = document.getElementById('btn-upscale');
+    const copyImgBtn = document.getElementById('btn-copy-image');
     const downloadBtn = document.getElementById('btn-download');
 
     const displayVal = visible ? 'inline-flex' : 'none';
     if (copyBtn) copyBtn.style.display = displayVal;
     if (rerollBtn) rerollBtn.style.display = displayVal;
+    if (favBtn) favBtn.style.display = displayVal;
+    if (upscaleBtn) upscaleBtn.style.display = displayVal;
+    if (copyImgBtn) copyImgBtn.style.display = displayVal;
     if (downloadBtn) downloadBtn.style.display = displayVal;
   }
 
@@ -102,24 +108,43 @@ export class ImagePreview {
     this.activeState = 'empty';
   }
 
-  showLoadingState(statusMessage = 'FLUX.1-schnell is rendering diffusion steps on GPU...', isColdStart = false) {
+  showLoadingState(statusMessage = 'Preparing generation request...', isColdStart = false) {
     this._hideAllStates();
     this._updateToolbarActions(false);
     if (this.loadingStatus) this.loadingStatus.textContent = statusMessage;
     if (this.coldStartIndicator) {
       this.coldStartIndicator.style.display = isColdStart ? 'inline-flex' : 'none';
     }
+    this.setStage('preparing');
     if (this.stateLoading) this.stateLoading.style.display = 'flex';
     this.activeState = 'loading';
+  }
+
+  setStage(stageName) {
+    const stages = ['preparing', 'submitting', 'waiting', 'generating'];
+    const targetIdx = stages.indexOf(stageName);
+    stages.forEach((name, idx) => {
+      const el = document.getElementById(`stage-${name}`);
+      if (!el) return;
+      el.classList.remove('done', 'active');
+      const numEl = el.querySelector('.step-num');
+      if (idx < targetIdx) {
+        el.classList.add('done');
+        if (numEl) numEl.textContent = '✓';
+      } else if (idx === targetIdx) {
+        el.classList.add('active');
+        if (numEl) numEl.textContent = String(idx + 1);
+      } else {
+        if (numEl) numEl.textContent = String(idx + 1);
+      }
+    });
   }
 
   showSuccessState(objectUrl, promptText = '', meta = {}) {
     this._hideAllStates();
     this._updateToolbarActions(true);
 
-    if (this.currentObjectUrl && this.currentObjectUrl.startsWith('blob:') && this.currentObjectUrl !== objectUrl) {
-      URL.revokeObjectURL(this.currentObjectUrl);
-    }
+    // Keep object URLs alive for session filmstrip history; app manages session cleanup
     this.currentObjectUrl = objectUrl;
     this.currentPrompt = promptText;
 
@@ -149,7 +174,7 @@ export class ImagePreview {
     }
 
     if (metaEngineTag && meta.model) {
-      metaEngineTag.textContent = meta.model.includes('FLUX') ? 'FLUX.1 HD' : 'SD 3.5 Turbo';
+      metaEngineTag.textContent = meta.model;
     }
 
     if (this.stateSuccess) this.stateSuccess.style.display = 'flex';

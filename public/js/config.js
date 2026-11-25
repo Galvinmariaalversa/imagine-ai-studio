@@ -16,7 +16,9 @@ export const CONFIG = {
   },
   // API Endpoints connecting to the internal secure backend gateway
   API_ENDPOINT: '/api/generate',
+  UPSCALE_ENDPOINT: '/api/upscale',
   HEALTH_ENDPOINT: '/api/health',
+  MOCK_DELAY_MS: 1200,
   // Graceful fallback to mock service if user has not yet configured HF_TOKEN in .env
   ENABLE_MOCK_FALLBACK: true
 };

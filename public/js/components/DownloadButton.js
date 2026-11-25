@@ -7,9 +7,10 @@
 import { CONFIG } from '../config.js';
 
 export class DownloadButton {
-  constructor({ buttonId, getImageDataFn }) {
+  constructor({ buttonId, getImageDataFn, getMimeTypeFn }) {
     this.button = document.getElementById(buttonId);
     this.getImageDataFn = getImageDataFn;
+    this.getMimeTypeFn = getMimeTypeFn;
 
     if (!this.button) {
       throw new Error('DownloadButton: Button DOM element missing.');
@@ -25,6 +26,14 @@ export class DownloadButton {
     });
   }
 
+  _getExtension(mimeType) {
+    const type = (mimeType || '').toLowerCase();
+    if (type.includes('webp')) return 'webp';
+    if (type.includes('jpeg') || type.includes('jpg')) return 'jpg';
+    if (type.includes('gif')) return 'gif';
+    return 'png';
+  }
+
   download() {
     const imageUrl = this.getImageDataFn ? this.getImageDataFn() : null;
     if (!imageUrl) {
@@ -32,9 +41,10 @@ export class DownloadButton {
       return;
     }
 
-    // Generate clean timestamped filename
+    const mimeType = this.getMimeTypeFn ? this.getMimeTypeFn() : '';
+    const ext = this._getExtension(mimeType);
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const filename = `${CONFIG.IMAGE.DEFAULT_FILENAME_PREFIX}-${timestamp}.png`;
+    const filename = `${CONFIG.IMAGE.DEFAULT_FILENAME_PREFIX}-${timestamp}.${ext}`;
 
     const anchor = document.createElement('a');
     anchor.href = imageUrl;

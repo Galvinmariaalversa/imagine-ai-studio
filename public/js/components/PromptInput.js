@@ -62,6 +62,20 @@ export class PromptInput {
         }
       });
     });
+
+    // Advanced Prompt Builder fields trigger validity check without altering textarea
+    const builderIds = [
+      'builder-subject', 'builder-environment', 'builder-lighting',
+      'builder-camera', 'builder-art-style', 'builder-mood', 'builder-composition'
+    ];
+    builderIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => {
+          if (this.onValidityChange) this.onValidityChange(this.isValid());
+        });
+      }
+    });
   }
 
   _bindPillControls() {
@@ -125,6 +139,73 @@ export class PromptInput {
     return this.textarea.value.trim();
   }
 
+  getCombinedPrompt() {
+    const manual = this.getValue();
+    const builderIds = [
+      'builder-subject', 'builder-environment', 'builder-lighting',
+      'builder-camera', 'builder-art-style', 'builder-mood', 'builder-composition'
+    ];
+    const parts = builderIds
+      .map(id => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      })
+      .filter(Boolean);
+
+    if (manual && parts.length > 0) {
+      return `${manual}, ${parts.join(', ')}`.slice(0, CONFIG.PROMPT.MAX_LENGTH);
+    }
+    if (parts.length > 0) {
+      return parts.join(', ').slice(0, CONFIG.PROMPT.MAX_LENGTH);
+    }
+    return manual;
+  }
+
+  isMeaningful(text = null) {
+    const val = (text !== null ? text : this.getCombinedPrompt()).trim();
+    if (val.length < CONFIG.PROMPT.MIN_LENGTH || val.length > CONFIG.PROMPT.MAX_LENGTH) return false;
+    if (/^(.)\1+$/i.test(val.replace(/\s+/g, ''))) return false;
+
+    const words = val.match(/[a-zA-Z\u00C0-\u024F]{2,}/g) || [];
+    const mashSet = new Set(['asdf', 'asdfg', 'qwer', 'qwert', 'qwerty', 'zxcv', 'zxcvb', 'hjkl', 'fdsa', 'rewq', 'vcxz']);
+
+    const validWords = words.filter((w) => {
+      const lower = w.toLowerCase();
+      if (mashSet.has(lower)) return false;
+      if (/^(.)\1+$/i.test(lower)) return false; // e.g. "aaa", "bbbb"
+      if (/^(.{2})\1+$/i.test(lower)) return false; // e.g. "ababab", "hjhj"
+      const hasVowel = /[aeiouy\u00C0-\u024F]/i.test(lower);
+      const hasConsonant = /[bcdfghjklmnpqrstvwxz]/i.test(lower);
+      return hasVowel && hasConsonant && lower.length >= 2;
+    });
+
+    return validWords.length >= 1;
+  }
+
+  getSeed() {
+    const randomToggle = document.getElementById('seed-random-toggle');
+    if (randomToggle && randomToggle.checked) return null;
+    const seedEl = document.getElementById('seed-input');
+    if (!seedEl || seedEl.value.trim() === '') return null;
+    const val = Number(seedEl.value);
+    if (!Number.isInteger(val) || val < 0 || val > 2147483647) return NaN;
+    return val;
+  }
+
+  getSteps() {
+    const el = document.getElementById('steps-input');
+    const val = el ? Number(el.value) : 4;
+    if (!Number.isInteger(val) || val < 1 || val > 12) return NaN;
+    return val;
+  }
+
+  getGuidanceScale() {
+    const el = document.getElementById('guidance-input');
+    const val = el ? Number(el.value) : 0;
+    if (Number.isNaN(val) || val < 0 || val > 15) return NaN;
+    return val;
+  }
+
   setValue(val) {
     this.textarea.value = val;
     this.updateCounter();
@@ -142,7 +223,7 @@ export class PromptInput {
   }
 
   isValid() {
-    const len = this.getValue().length;
+    const len = this.getCombinedPrompt().length;
     return len >= CONFIG.PROMPT.MIN_LENGTH && len <= CONFIG.PROMPT.MAX_LENGTH;
   }
 
