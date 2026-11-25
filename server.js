@@ -57,7 +57,7 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
-const server = http.createServer(async (req, res) => {
+async function requestHandler(req, res) {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
 
@@ -79,7 +79,9 @@ const server = http.createServer(async (req, res) => {
 
   res.writeHead(405, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'METHOD_NOT_ALLOWED', message: 'Method Not Allowed' }));
-});
+}
+
+const server = http.createServer(requestHandler);
 
 function serveStatic(req, res, pathname) {
   let safePath = path.normalize(decodeURIComponent(pathname)).replace(/^(\.\.[\/\\])+/, '');
@@ -137,4 +139,5 @@ if (require.main === module) {
   server.listen(PORT, '127.0.0.1');
 }
 
-module.exports = { server };
+requestHandler.server = server;
+module.exports = requestHandler;
