@@ -2668,6 +2668,149 @@ select:focus-visible {
   pointer-events: none;
 }
 
+/* ==========================================================================
+   Mobile Responsive Polish (<= 640px & <= 420px)
+   ========================================================================== */
+@media (max-width: 640px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .prompt-textarea,
+  .negative-prompt-input,
+  .builder-field-input,
+  .gallery-search-input,
+  .settings-select {
+    font-size: 16px;
+  }
+
+  /* Sleek horizontal mobile nav bar with icon + compact label */
+  .studio-nav-rail {
+    padding: 6px 8px;
+    gap: 6px;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+
+  .studio-nav-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-rail-group {
+    flex-shrink: 0;
+  }
+
+  .nav-rail-item {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 10px;
+    min-width: 60px;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-rail-item span {
+    display: block;
+    font-size: 0.64rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  /* Viewport toolbar buttons wrap into a clean 3-column mobile grid */
+  .viewport-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .viewport-right {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .viewport-right .toolbar-btn {
+    justify-content: center;
+    padding: 7px 6px;
+    min-height: 36px;
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+
+  /* Image Info Panel: 2-column grid with full-width prompt row */
+  .image-info-panel {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 12px;
+    padding: 12px 14px;
+  }
+
+  .info-item-prompt {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .info-item {
+    min-width: 0;
+  }
+
+  /* Bottom gallery bar */
+  .session-filmstrip-bar {
+    height: auto;
+    min-height: 82px;
+    padding: 10px 12px;
+  }
+
+  .filmstrip-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Lightbox mobile safe positioning */
+  .lightbox-content {
+    max-width: 96vw;
+    max-height: 90vh;
+  }
+
+  .lightbox-close-btn {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Settings rows stack cleanly */
+  .settings-row {
+    padding: 14px 16px;
+  }
+
+  .settings-select,
+  .gallery-search-input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .viewport-right {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .batch-pill {
+    padding: 9px 4px;
+    font-size: 0.72rem;
+  }
+
+  .home-hero-actions .btn-primary-cta,
+  .home-hero-actions .btn-secondary-cta {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .batch-results-grid {
   display: flex;
   gap: 10px;
